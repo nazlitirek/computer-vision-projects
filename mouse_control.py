@@ -1,6 +1,7 @@
 import pyautogui
 import numpy as np
 from collections import deque
+from pynput.mouse import Controller as MouseCtrl
 
 BUFFER_SIZE = 5
 
@@ -11,6 +12,7 @@ class MouseController:
         self.screen_w, self.screen_h = pyautogui.size()
         self.buffer_x = deque(maxlen=BUFFER_SIZE)
         self.buffer_y = deque(maxlen=BUFFER_SIZE)
+        self.pynput_mouse = MouseCtrl()
 
     def move(self, lm):
         self.buffer_x.append(lm[8].x)
@@ -26,6 +28,7 @@ class MouseController:
         mouse_y = max(0, min(self.screen_h, mouse_y))
 
         pyautogui.moveTo(mouse_x, mouse_y, duration=0.05)
+
     def left_click(self):
         pyautogui.click()
 
@@ -34,4 +37,4 @@ class MouseController:
 
     def scroll(self, amount):
         if amount != 0:
-            pyautogui.scroll(amount)
+            self.pynput_mouse.scroll(0, amount)
